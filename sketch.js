@@ -1,88 +1,86 @@
-// Position variables
-let circlePositionX = 200;
-let circlePositionY = 200;
+// Variáveis de posição (começa no centro)
+let circlePositionX = 300;
+let circlePositionY = 300;
 
-// Speed variables
-let circleSpeedX = 2;
-let circleSpeedY = 3;
+// Variáveis de velocidade (mudámos para valores iguais para o ricochete ser simétrico e previsível)
+let circleSpeedX = 4;
+let circleSpeedY = 4;
 
-// Radius variable
-let circleRadius = 25;
-
-// Hue variable
+let circleRadius = 30;
 let circleHue = 0;
 
+// Variável para controlar a cor do preenchimento (0 = preto, 255 = branco)
+let corInterior = 255; 
+
 function setup() {
-  // Create 400x400 canvas
-  createCanvas(400, 400);
+  // 1. Background maior (600x600 dá mais espaço para o movimento respirar)
+  createCanvas(600, 600);
 
-  // Cover canvas with white
-  background(255);
-
-  // Draw ellipses using their radius
   ellipseMode(RADIUS);
-
-  // Use Hue Saturation Brightness for colors on circle trail
+  
+  // Usamos HSB para a cor do contorno (Hue, Saturation, Brightness)
   colorMode(HSB);
+  
+  strokeWeight(5);
 
-  // Set stroke weight to 4 units
-  strokeWeight(4);
-
-  // Create screen reader accessible description
   describe(
-    'A circle starts in the center of the canvas. When the user holds the mouse down, the circle bounces around the canvas, its inside switches between black and white, and its outline fades between colors, leaving a rainbow trail.'
+    'Um círculo que se move num ecrã grande quando o rato é pressionado. Ele muda entre preto e branco sempre que bate numa parede, deixando um rasto de luz suave.'
   );
 }
 
 function draw() {
-  // Set stroke color using current hue
+  /* 
+    ELEMENTO DIFERENTE (Do site p5.js): 
+    Em vez de limpar o fundo com background(20), usamos um fundo com transparência (alfa).
+    Isto faz com que os frames anteriores desapareçam suavemente, criando um rasto de luz limpo,
+    sem acumular círculos infinitos no ecrã.
+  */
+  background(20, 0.15); // O 0.15 controla a suavidade do rasto.
+
+  // Define a cor do contorno com base no arco-íris atual
   stroke(circleHue, 80, 90);
 
-  // If circle's x position is between 100 and 300
-  if (circlePositionX >= 100 && circlePositionX <= 300) {
-    // Set fill color to black
-    fill(0);
+  // Aplica a cor interior (que muda apenas quando bate nas paredes)
+  fill(corInterior);
 
-    // Otherwise
-  } else {
-    // Set fill color to white
-    fill(255);
-  }
-
-  // Draw circle at current position
+  // Desenha o círculo
   circle(circlePositionX, circlePositionY, circleRadius);
 
-  // If mouse is held down, animate the sketch
+  // O movimento só acontece se o rato estiver pressionado
   if (mouseIsPressed === true) {
-    // Add speed to circle's position to make it move
     circlePositionX = circlePositionX + circleSpeedX;
     circlePositionY = circlePositionY + circleSpeedY;
 
-    // Increase hue by 1
-    circleHue = circleHue + 1;
+    // Avança a cor do contorno suavemente
+    circleHue = circleHue + 1.5;
   }
 
-  // If hue has reached maximum value
+  // Faz a cor do contorno voltar ao início se chegar ao fim do arco-íris
   if (circleHue >= 360) {
-    // Reset hue to 0
     circleHue = 0;
   }
 
-  // If circle is beyond left or right edge
-  if (
-    circlePositionX < circleRadius ||
-    circlePositionX > width - circleRadius
-  ) {
-    // Reverse horizontal speed
-    circleSpeedX = -circleSpeedX;
+  // CONDIÇÃO: Colisão com as paredes Esquerda/Direita
+  if (circlePositionX < circleRadius || circlePositionX > width - circleRadius) {
+    circleSpeedX = -circleSpeedX; // Inverte a direção
+    
+    // MUDANÇA DE COR AO BATER: Se estava branco, fica preto. Se estava preto, fica branco.
+    if (corInterior === 255) {
+      corInterior = 0;
+    } else {
+      corInterior = 255;
+    }
   }
 
-  // If circle is beyond top or bottom edge
-  if (
-    circlePositionY < circleRadius ||
-    circlePositionY > height - circleRadius
-  ) {
-    // Reverse vertical speed
-    circleSpeedY = -circleSpeedY;
+  // CONDIÇÃO: Colisão com as paredes Topo/Fundo
+  if (circlePositionY < circleRadius || circlePositionY > height - circleRadius) {
+    circleSpeedY = -circleSpeedY; // Inverte a direção
+    
+    // MUDANÇA DE COR AO BATER: Faz o mesmo efeito de alternância
+    if (corInterior === 255) {
+      corInterior = 0;
+    } else {
+      corInterior = 255;
+    }
   }
 }
