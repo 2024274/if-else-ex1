@@ -39,7 +39,7 @@ function draw() {
   stroke(circleHue, 80, 90);
 
   // If circle's x position is between 100 and 300
-  if (circlePositionX <= 0 && circlePositionX >= width) {
+  if (circlePositionX >= 100 && circlePositionX <= 300) {
     // Set fill color to black
     fill(0);
 
