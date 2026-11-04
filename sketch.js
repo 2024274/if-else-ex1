@@ -22,12 +22,6 @@ function setup() {
   // Draw ellipses using their radius
   ellipseMode(RADIUS);
 
-  // Draw rectangles on either side of the canvas
-  noStroke();
-  fill(128);
-  rect(0, 0, 100, height);
-  rect(300, 0, 100, height);
-
   // Use Hue Saturation Brightness for colors on circle trail
   colorMode(HSB);
 
