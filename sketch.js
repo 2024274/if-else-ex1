@@ -4,7 +4,7 @@ let circlePositionY = 300;
 
 // Variáveis de velocidade (mudámos para valores iguais para o ricochete ser simétrico e previsível)
 let circleSpeedX = 4;
-let circleSpeedY = 4;
+let circleSpeedY = 3;
 
 let circleRadius = 30;
 let circleHue = 0;
